@@ -99,6 +99,9 @@ cor_spearman <- cor(paisDATA, method = "spearman")
 
 ```
 
-me estoy muriendo xd
 
-no te mueras cariño
+Si podéis leer esto escribid en el grupo "todo en orden"
+
+
+
+
