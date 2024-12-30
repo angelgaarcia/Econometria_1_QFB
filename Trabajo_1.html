@@ -123,27 +123,203 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </header>
 
-<section id="quarto" class="level2">
-<h2 class="anchored" data-anchor-id="quarto">Quarto</h2>
-<p>Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <a href="https://quarto.org" class="uri">https://quarto.org</a>.</p>
-</section>
-<section id="running-code" class="level2">
-<h2 class="anchored" data-anchor-id="running-code">Running Code</h2>
-<p>When you click the <strong>Render</strong> button a document will be generated that includes both content and the output of embedded code. You can embed code like this:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">+</span> <span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'readxl' was built under R version 4.2.3</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Cargo la base datos con la que se va a trabajar: </span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"risk.xlsx"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>New names:
+• `` -&gt; `...1`</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Me quedo con las columnas que me interesan:</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>data_lon <span class="ot">&lt;-</span> data[, <span class="sc">-</span><span class="fu">c</span>(<span class="dv">2</span><span class="sc">:</span><span class="dv">13</span>)]</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">#Primera columna son las fechas:</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(data_lon)[<span class="fu">colnames</span>(data_lon) <span class="sc">==</span> <span class="st">"...1"</span>] <span class="ot">&lt;-</span> <span class="st">"Fecha"</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#Doy formato de fecha: </span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>data_lon<span class="sc">$</span>Fecha <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(data_lon<span class="sc">$</span>Fecha, <span class="at">format =</span> <span class="st">"%Y/%m/%d"</span>)  </span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co">#Elimino na:</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>data_lon <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(data_lon)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="do">###### ANÁLISIS DESCRIPTIVO: </span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="co">#Gráfico de cotizaciones Scottish and Southern Energy:</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(data_lon<span class="sc">$</span>Fecha, data_lon<span class="sc">$</span>eLON_SSE, <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">col =</span> <span class="st">"blue"</span>, <span class="at">lwd =</span> <span class="dv">2</span>,</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Periodo"</span>, <span class="at">ylab =</span> <span class="st">"Cotización"</span>, <span class="at">main =</span> <span class="st">"Evolución cotizaciones - Scottish and Southern Energy (2015 - 2020)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Trabajo_1_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Gráfico de cotizaciones Drax Group:</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(data_lon<span class="sc">$</span>Fecha, data_lon<span class="sc">$</span>eLON_DRAX, <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">col =</span> <span class="st">"blue"</span>, <span class="at">lwd =</span> <span class="dv">2</span>,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Periodo"</span>, <span class="at">ylab =</span> <span class="st">"Cotización"</span>, <span class="at">main =</span> <span class="st">"Evolución cotizaciones - Drax Group (2015 - 2020)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Trabajo_1_files/figure-html/unnamed-chunk-1-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Gráfico de cotizaciones MSCI Europe:</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(data_lon<span class="sc">$</span>Fecha, data_lon<span class="sc">$</span><span class="st">`</span><span class="at">MSCI EUR</span><span class="st">`</span>, <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">col =</span> <span class="st">"blue"</span>, <span class="at">lwd =</span> <span class="dv">2</span>,</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Periodo"</span>, <span class="at">ylab =</span> <span class="st">"Cotización"</span>, <span class="at">main =</span> <span class="st">"Evolución cotizaciones - MSCI Europe (2015 - 2020)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Trabajo_1_files/figure-html/unnamed-chunk-1-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Gráfico de cotizaciones Futuros del gas:</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(data_lon<span class="sc">$</span>Fecha, data_lon<span class="sc">$</span>PrGasF, <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">col =</span> <span class="st">"blue"</span>, <span class="at">lwd =</span> <span class="dv">2</span>,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Periodo"</span>, <span class="at">ylab =</span> <span class="st">"Cotización"</span>, <span class="at">main =</span> <span class="st">"Evolución cotizaciones - Futuros del gas (2015 - 2020)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Trabajo_1_files/figure-html/unnamed-chunk-1-4.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Calculo rendimientos usando logaritmos: </span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'dplyr' was built under R version 4.2.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>data_lon <span class="ot">&lt;-</span> data_lon <span class="sc">%&gt;%</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">.cols =</span> <span class="fu">c</span>(eLON_SSE, eLON_DRAX, <span class="st">`</span><span class="at">MSCI EUR</span><span class="st">`</span>, PrGasF), </span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">.fns =</span> <span class="sc">~</span> <span class="fu">log</span>(. <span class="sc">/</span> <span class="fu">lag</span>(.)),             </span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">.names =</span> <span class="st">"rend_{.col}"</span>                </span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  ))</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>data_lon <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(data_lon)</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="co">#Gráfica de rendimientos Scottish and Southern Energy:</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(data_lon<span class="sc">$</span>Fecha, data_lon<span class="sc">$</span>rend_eLON_SSE, <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">col =</span> <span class="st">"blue"</span>, <span class="at">lwd =</span> <span class="dv">2</span>,</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Periodo"</span>, <span class="at">ylab =</span> <span class="st">"Rendimiento"</span>, <span class="at">main =</span> <span class="st">"Evolución rendimientos - Scottish and Southern Energy (2015 - 2020)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Trabajo_1_files/figure-html/unnamed-chunk-1-5.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Gráfica de rendimientos Drax Group:</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(data_lon<span class="sc">$</span>Fecha, data_lon<span class="sc">$</span>rend_eLON_DRAX, <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">col =</span> <span class="st">"blue"</span>, <span class="at">lwd =</span> <span class="dv">2</span>,</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Periodo"</span>, <span class="at">ylab =</span> <span class="st">"Rendimiento"</span>, <span class="at">main =</span> <span class="st">"Evolución rendimientos - Drax Group (2015 - 2020)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Trabajo_1_files/figure-html/unnamed-chunk-1-6.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Gráfica de rendimientos MSCI:</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(data_lon<span class="sc">$</span>Fecha, data_lon<span class="sc">$</span><span class="st">`</span><span class="at">rend_MSCI EUR</span><span class="st">`</span>, <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">col =</span> <span class="st">"blue"</span>, <span class="at">lwd =</span> <span class="dv">2</span>,</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Periodo"</span>, <span class="at">ylab =</span> <span class="st">"Rendimiento"</span>, <span class="at">main =</span> <span class="st">"Evolución rendimientos - MSCI (2015 - 2020)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Trabajo_1_files/figure-html/unnamed-chunk-1-7.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Gráfica de rendimientos de Futuros Gas:</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(data_lon<span class="sc">$</span>Fecha, data_lon<span class="sc">$</span>rend_PrGasF, <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">col =</span> <span class="st">"blue"</span>, <span class="at">lwd =</span> <span class="dv">2</span>,</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Periodo"</span>, <span class="at">ylab =</span> <span class="st">"Rendimiento"</span>, <span class="at">main =</span> <span class="st">"Evolución rendimientos - Futuros del Gas (2015 - 2020)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Trabajo_1_files/figure-html/unnamed-chunk-1-8.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Calculo las primeras diferencias de las variables de incertidumbre: EPU, VSTOXX, OVX. </span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>data_lon <span class="ot">&lt;-</span> data_lon <span class="sc">%&gt;%</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">.cols =</span> <span class="fu">c</span>(VSTOXX, EPU_USA, <span class="st">`</span><span class="at">OVX EUR</span><span class="st">`</span>),  </span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">.fns =</span> <span class="sc">~</span> . <span class="sc">-</span> <span class="fu">lag</span>(.),          </span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">.names =</span> <span class="st">"dif_{.col}"</span>         </span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  ))</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>data_lon <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(data_lon)</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="co">#Gráfica primeras diferencias VSTOXX:</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(data_lon<span class="sc">$</span>Fecha, data_lon<span class="sc">$</span>dif_VSTOXX, <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">col =</span> <span class="st">"blue"</span>, <span class="at">lwd =</span> <span class="dv">2</span>,</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Periodo"</span>, <span class="at">ylab =</span> <span class="st">"Primeras diferencias"</span>, <span class="at">main =</span> <span class="st">"Evolución VSTOXX (2015 - 2020)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Trabajo_1_files/figure-html/unnamed-chunk-1-9.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Gráfica primeras diferencias EPU_USA:</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(data_lon<span class="sc">$</span>Fecha, data_lon<span class="sc">$</span>dif_EPU_USA, <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">col =</span> <span class="st">"blue"</span>, <span class="at">lwd =</span> <span class="dv">2</span>,</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Periodo"</span>, <span class="at">ylab =</span> <span class="st">"Primeras diferencias"</span>, <span class="at">main =</span> <span class="st">"Evolución EPU_USA (2015 - 2020)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Trabajo_1_files/figure-html/unnamed-chunk-1-10.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Gráfica primeras diferencias OVX:</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(data_lon<span class="sc">$</span>Fecha, data_lon<span class="sc">$</span><span class="st">`</span><span class="at">dif_OVX EUR</span><span class="st">`</span>, <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">col =</span> <span class="st">"blue"</span>, <span class="at">lwd =</span> <span class="dv">2</span>,</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Periodo"</span>, <span class="at">ylab =</span> <span class="st">"Primeras diferencias"</span>, <span class="at">main =</span> <span class="st">"Evolución OVX (2015 - 2020)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Trabajo_1_files/figure-html/unnamed-chunk-1-11.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Creo nuevo dataframe "paisDATA":</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>paisDATA <span class="ot">&lt;-</span> data_lon[, <span class="sc">-</span><span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">8</span>)]</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co">#Estadisticos principales de paisDATA:</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fBasics)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'fBasics' was built under R version 4.2.3</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(paisDATA)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 2</code></pre>
+<pre><code> rend_eLON_SSE        rend_eLON_DRAX       rend_MSCI EUR       
+ Min.   :-1.097e-01   Min.   :-0.3167595   Min.   :-1.331e-01  
+ 1st Qu.:-7.337e-03   1st Qu.:-0.0119779   1st Qu.:-5.091e-03  
+ Median : 6.373e-04   Median :-0.0005275   Median : 4.471e-04  
+ Mean   : 5.132e-05   Mean   : 0.0000101   Mean   : 2.482e-05  
+ 3rd Qu.: 8.347e-03   3rd Qu.: 0.0123029   3rd Qu.: 5.847e-03  
+ Max.   : 1.130e-01   Max.   : 0.1470776   Max.   : 7.910e-02  
+  rend_PrGasF           dif_VSTOXX          dif_EPU_USA       
+ Min.   :-0.1543001   Min.   :-11.897900   Min.   :-308.9500  
+ 1st Qu.:-0.0146223   1st Qu.: -0.778000   1st Qu.: -25.0500  
+ Median :-0.0008097   Median : -0.097100   Median :  -0.3930  
+ Mean   :-0.0000344   Mean   : -0.008756   Mean   :   0.1429  
+ 3rd Qu.: 0.0133198   3rd Qu.:  0.615800   3rd Qu.:  24.3300  
+ Max.   : 0.3169831   Max.   : 17.758100   Max.   : 358.2800  
+  dif_OVX EUR       
+ Min.   :-84.03120  
+ 1st Qu.: -0.95687  
+ Median : -0.08235  
+ Mean   : -0.01146  
+ 3rd Qu.:  0.83839  
+ Max.   :119.96342  </code></pre>
 </div>
-</div>
-<p>You can add options to executable code like this</p>
-<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">basicStats</span>(paisDATA)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 4</code></pre>
+<pre><code>            rend_eLON_SSE rend_eLON_DRAX rend_MSCI.EUR rend_PrGasF  dif_VSTOXX
+nobs          1515.000000    1515.000000   1515.000000 1515.000000 1515.000000
+NAs              0.000000       0.000000      0.000000    0.000000    0.000000
+Minimum         -0.109654      -0.316759     -0.133100   -0.154300  -11.897900
+Maximum          0.113047       0.147078      0.079104    0.316983   17.758100
+1. Quartile     -0.007337      -0.011978     -0.005091   -0.014622   -0.778000
+3. Quartile      0.008347       0.012303      0.005847    0.013320    0.615800
+Mean             0.000051       0.000010      0.000025   -0.000034   -0.008756
+Median           0.000637      -0.000527      0.000447   -0.000810   -0.097100
+Sum              0.077748       0.015343      0.037606   -0.052064  -13.265300
+SE Mean          0.000421       0.000653      0.000302    0.000798    0.048255
+LCL Mean        -0.000775      -0.001270     -0.000567   -0.001599   -0.103409
+UCL Mean         0.000877       0.001290      0.000616    0.001530    0.085897
+Variance         0.000269       0.000645      0.000138    0.000964    3.527708
+Stdev            0.016389       0.025400      0.011740    0.031044    1.878219
+Skewness        -0.524637      -0.831504     -1.404311    1.569942    1.134902
+Kurtosis         7.472268      19.513313     15.449558   14.920416   13.193518
+            dif_EPU_USA dif_OVX.EUR
+nobs        1515.000000 1515.000000
+NAs            0.000000    0.000000
+Minimum     -308.950000  -84.031196
+Maximum      358.280000  119.963420
+1. Quartile  -25.050000   -0.956867
+3. Quartile   24.330000    0.838390
+Mean           0.142878   -0.011461
+Median        -0.393000   -0.082346
+Sum          216.460000  -17.363605
+SE Mean        1.451261    0.150084
+LCL Mean      -2.703818   -0.305856
+UCL Mean       2.989574    0.282934
+Variance    3190.832038   34.125733
+Stdev         56.487450    5.841723
+Skewness       0.104955    4.705039
+Kurtosis       5.236949  210.813827</code></pre>
 </div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Matriz de correlación de Spearman: </span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>cor_spearman <span class="ot">&lt;-</span> <span class="fu">cor</span>(paisDATA, <span class="at">method =</span> <span class="st">"spearman"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>The <code>echo: false</code> option disables the printing of code (only output is displayed).</p>
-</section>
 
 </main>
 <!-- /main column -->

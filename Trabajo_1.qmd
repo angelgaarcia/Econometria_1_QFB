@@ -4,23 +4,98 @@ format: html
 editor: visual
 ---
 
-## Quarto
-
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
-
-## Running Code
-
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
-
 ```{r}
-1 + 1
+library(readxl)
+#Cargo la base datos con la que se va a trabajar: 
+data <- read_excel("risk.xlsx")
+
+#Me quedo con las columnas que me interesan:
+data_lon <- data[, -c(2:13)]
+
+#Primera columna son las fechas:
+colnames(data_lon)[colnames(data_lon) == "...1"] <- "Fecha"
+
+#Doy formato de fecha: 
+data_lon$Fecha <- as.Date(data_lon$Fecha, format = "%Y/%m/%d")  
+
+#Elimino na:
+data_lon <- na.omit(data_lon)
+
+###### ANÁLISIS DESCRIPTIVO: 
+
+#Gráfico de cotizaciones Scottish and Southern Energy:
+plot(data_lon$Fecha, data_lon$eLON_SSE, type = "l", col = "blue", lwd = 2,
+     xlab = "Periodo", ylab = "Cotización", main = "Evolución cotizaciones - Scottish and Southern Energy (2015 - 2020)")
+
+#Gráfico de cotizaciones Drax Group:
+plot(data_lon$Fecha, data_lon$eLON_DRAX, type = "l", col = "blue", lwd = 2,
+     xlab = "Periodo", ylab = "Cotización", main = "Evolución cotizaciones - Drax Group (2015 - 2020)")
+
+#Gráfico de cotizaciones MSCI Europe:
+plot(data_lon$Fecha, data_lon$`MSCI EUR`, type = "l", col = "blue", lwd = 2,
+     xlab = "Periodo", ylab = "Cotización", main = "Evolución cotizaciones - MSCI Europe (2015 - 2020)")
+
+#Gráfico de cotizaciones Futuros del gas:
+plot(data_lon$Fecha, data_lon$PrGasF, type = "l", col = "blue", lwd = 2,
+     xlab = "Periodo", ylab = "Cotización", main = "Evolución cotizaciones - Futuros del gas (2015 - 2020)")
+
+#Calculo rendimientos usando logaritmos: 
+library(dplyr)
+data_lon <- data_lon %>%
+  mutate(across(
+    .cols = c(eLON_SSE, eLON_DRAX, `MSCI EUR`, PrGasF), 
+    .fns = ~ log(. / lag(.)),             
+    .names = "rend_{.col}"                
+  ))
+data_lon <- na.omit(data_lon)
+
+#Gráfica de rendimientos Scottish and Southern Energy:
+plot(data_lon$Fecha, data_lon$rend_eLON_SSE, type = "l", col = "blue", lwd = 2,
+     xlab = "Periodo", ylab = "Rendimiento", main = "Evolución rendimientos - Scottish and Southern Energy (2015 - 2020)")
+
+#Gráfica de rendimientos Drax Group:
+plot(data_lon$Fecha, data_lon$rend_eLON_DRAX, type = "l", col = "blue", lwd = 2,
+     xlab = "Periodo", ylab = "Rendimiento", main = "Evolución rendimientos - Drax Group (2015 - 2020)")
+
+#Gráfica de rendimientos MSCI:
+plot(data_lon$Fecha, data_lon$`rend_MSCI EUR`, type = "l", col = "blue", lwd = 2,
+     xlab = "Periodo", ylab = "Rendimiento", main = "Evolución rendimientos - MSCI (2015 - 2020)")
+
+#Gráfica de rendimientos de Futuros Gas:
+plot(data_lon$Fecha, data_lon$rend_PrGasF, type = "l", col = "blue", lwd = 2,
+     xlab = "Periodo", ylab = "Rendimiento", main = "Evolución rendimientos - Futuros del Gas (2015 - 2020)")
+
+#Calculo las primeras diferencias de las variables de incertidumbre: EPU, VSTOXX, OVX. 
+data_lon <- data_lon %>%
+  mutate(across(
+    .cols = c(VSTOXX, EPU_USA, `OVX EUR`),  
+    .fns = ~ . - lag(.),          
+    .names = "dif_{.col}"         
+  ))
+data_lon <- na.omit(data_lon)
+
+#Gráfica primeras diferencias VSTOXX:
+plot(data_lon$Fecha, data_lon$dif_VSTOXX, type = "l", col = "blue", lwd = 2,
+     xlab = "Periodo", ylab = "Primeras diferencias", main = "Evolución VSTOXX (2015 - 2020)")
+
+#Gráfica primeras diferencias EPU_USA:
+plot(data_lon$Fecha, data_lon$dif_EPU_USA, type = "l", col = "blue", lwd = 2,
+     xlab = "Periodo", ylab = "Primeras diferencias", main = "Evolución EPU_USA (2015 - 2020)")
+
+#Gráfica primeras diferencias OVX:
+plot(data_lon$Fecha, data_lon$`dif_OVX EUR`, type = "l", col = "blue", lwd = 2,
+     xlab = "Periodo", ylab = "Primeras diferencias", main = "Evolución OVX (2015 - 2020)")
+
+#Creo nuevo dataframe "paisDATA":
+paisDATA <- data_lon[, -c(1:8)]
+
+#Estadisticos principales de paisDATA:
+library(fBasics)
+summary(paisDATA)
+basicStats(paisDATA)
+
+#Matriz de correlación de Spearman: 
+cor_spearman <- cor(paisDATA, method = "spearman")
+
 ```
 
-You can add options to executable code like this
-
-```{r}
-#| echo: false
-2 * 2
-```
-
-The `echo: false` option disables the printing of code (only output is displayed).
