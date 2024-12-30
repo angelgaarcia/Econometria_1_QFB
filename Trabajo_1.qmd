@@ -98,4 +98,7 @@ basicStats(paisDATA)
 cor_spearman <- cor(paisDATA, method = "spearman")
 
 ```
+
 me estoy muriendo xd
+
+no te mueras cariño
