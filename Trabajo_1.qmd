@@ -101,7 +101,4 @@ cor_spearman <- cor(paisDATA, method = "spearman")
 
 Si podéis leer esto escribid en el grupo "todo en orden"
 
-Ángel: todo en orden
-José Enrique: todo en orden
-Yonathan: todo en orden
-
+Ángel: todo en orden José Enrique: todo en orden Yonathan: todo en orden. Mario: Todo en orden
